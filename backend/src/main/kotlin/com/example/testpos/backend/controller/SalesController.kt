@@ -22,8 +22,8 @@ class SalesController(
 
     @GetMapping("/report")
     fun getSalesReport(): SalesReportDto {
-        val today = LocalDate.now(ZoneId.of("Asia/Manila")).toString()
-        val salesToday = saleRepository.findAll().filter { it.datetime.startsWith(today) }
+        val today = LocalDate.now(ZoneId.of("Asia/Manila"))
+        val salesToday = saleRepository.findAll().filter { it.datetime.toLocalDate() == today }
         val saleIds = salesToday.mapNotNull { it.id }.toSet()
         val totalAmount = salesToday.map { it.total }.fold(BigDecimal.ZERO, BigDecimal::add)
         val totalItems = saleItemRepository.findAll()
@@ -33,7 +33,7 @@ class SalesController(
         return SalesReportDto(
             totalSales = totalAmount,
             itemsSold = totalItems,
-            reportDate = today
+            reportDate = today.toString()
         )
     }
 
@@ -57,19 +57,6 @@ class SalesController(
             totalRevenue = totalRevenue,
             totalTransactions = sales.size,
             topCategories = topCategories
-        )
-    }
-
-    @GetMapping("/reports/cashier")
-    fun getCashierReports(): List<CashierReportDto> {
-        val sales = saleRepository.findAll()
-        val total = sales.map { it.total }.fold(BigDecimal.ZERO, BigDecimal::add).toDouble()
-        return listOf(
-            CashierReportDto(
-                cashierName = "Madam POS",
-                totalSales = total,
-                transactionCount = sales.size
-            )
         )
     }
 }

@@ -2,21 +2,22 @@ package com.example.testpos.backend.entity
 
 import jakarta.persistence.*
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "sales")
 class Sale(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    var id: Int? = null,
 
     @Column(name = "datetime", nullable = false)
-    var datetime: String = "",
+    var datetime: LocalDateTime = LocalDateTime.now(),
 
-    @Column(nullable = false)
+    @Column(name = "total", nullable = false)
     var total: BigDecimal = BigDecimal.ZERO,
 
-    @Column(nullable = false)
+    @Column(name = "cash", nullable = false)
     var cash: BigDecimal = BigDecimal.ZERO,
 
     @Column(name = "change_due", nullable = false)

@@ -8,10 +8,10 @@ import java.math.BigDecimal
 class SaleItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    var id: Int? = null,
 
     @Column(name = "sale_id", nullable = false)
-    var saleId: Long = 0,
+    var saleId: Int = 0,
 
     @Column(name = "product_name", nullable = false)
     var productName: String = "",
