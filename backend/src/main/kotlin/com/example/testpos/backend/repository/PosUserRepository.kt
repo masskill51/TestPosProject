@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface PosUserRepository : JpaRepository<PosUser, Long> {
+interface PosUserRepository : JpaRepository<PosUser, Int> {
     fun findByUsername(username: String): PosUser?
 }
