@@ -16,19 +16,25 @@ class AuthController(private val userRepository: PosUserRepository) {
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Any> {
-        val user = userRepository.findByUsername(request.username)
-        
-        return if (user != null && user.password == request.password) {
-            ResponseEntity.ok(
-                AuthResponse(
-                    userId = (user.id ?: 0).toString(),
-                    username = user.username,
-                    role = user.role,
-                    token = "fake-jwt-token" // Placeholder
+        return try {
+            val user = userRepository.findByUsername(request.username)
+            
+            if (user != null && user.password == request.password) {
+                ResponseEntity.ok(
+                    AuthResponse(
+                        userId = (user.id ?: 0).toString(),
+                        username = user.username,
+                        role = user.role,
+                        token = "fake-jwt-token"
+                    )
                 )
-            )
-        } else {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid username or password"))
+            } else {
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid username or password"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(mapOf("error" to "Database error: ${e.message}"))
         }
     }
 }
